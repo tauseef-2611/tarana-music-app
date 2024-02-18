@@ -5,7 +5,7 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build",
+    "build": "cd frontend && npm run build",
     "start": "concurrently \"cd frontend && npm install && npm start\" \"cd backend && npm install && node server.js\""
   },
   "devDependencies": {
