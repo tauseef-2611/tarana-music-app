@@ -6,9 +6,10 @@
   "license": "ISC",
   "description": "",
   "scripts": {
+    "build": "cd frontend && npm install && npm run build",
     "start": "cd frontend && npm install && npm start & cd backend && npm install && node server.js"
-  }
-  ,
+  },
+  
   "devDependencies": {
     "concurrently": "^8.2.2"
   }
