@@ -4,7 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 8000;
+const port = 8000;
 app.use(express.json());
 app.use(cors());
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -171,6 +171,6 @@ const MusicModel = mongoose.model('Music', {
   });
 
   app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(` My Server is running on port ${port}`);
   });
 
