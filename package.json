@@ -2,7 +2,7 @@
   "name": "taranaapp",
   "version": "1.0.0",
   "proxy": "http://localhost:3001",
-  "author": "",
+  "author": "Taus",
   "license": "ISC",
   "scripts": {
     "build": "cd frontend && npm run build",
