@@ -1,0 +1,14 @@
+{
+  "name": "taranaapp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "scripts": {
+    "start": "concurrently \"cd frontend && npm install && npm start\" \"cd backend && npm install && node server.js\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
