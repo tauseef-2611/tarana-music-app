@@ -1,0 +1,35 @@
+/* src/components/bottomNavigation.css */
+
+.bottom-navigation {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.058);
+  backdrop-filter: blur(10px);
+  padding: 10px;
+  z-index: 1000;
+
+}
+
+.nav-link {
+  width: 40px;
+  height: 40px;
+  border-radius: 20%;
+  text-decoration: none;
+  color: #fff;
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.5rem;
+  transition: scale 0.3s ease;
+}
+
+.nav-link.active {
+  background: linear-gradient(50deg, rgba(146,25,133,1) 0%, rgba(25,59,146,1) 100%);    border: 0px solid transparent;
+  scale: 1.1;
+  color: #ffffff; /* Change to your desired active color */
+}

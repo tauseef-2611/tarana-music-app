@@ -1,0 +1,72 @@
+.category-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 5px;
+}
+.cat-item
+{
+  margin: 10px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.058);
+  backdrop-filter: blur(10px);
+    height: 90px;
+    width: 90px;
+  border-radius: 10%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  gap: 5px;
+}
+.cat-item:hover
+{
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+.cat-img
+{
+    width: auto;
+    height: 30px;
+    clip: auto;
+    padding: 1px;
+    display: block;
+    filter: invert(1);
+}
+.cat-name
+{
+    text-align: center;
+    color: whitesmoke;
+    font-size: 0.8rem;
+    font-weight: 300;
+    text-decoration: none;
+    outline: none;
+
+}
+.cat-head
+{
+    text-align: left;
+    color: whitesmoke;
+    font-size: 1.1rem;
+    font-weight: 600;
+padding-left: 30px;
+margin-bottom: 0;
+margin-top: 20px;
+    text-decoration: none;
+    outline: none;
+
+}
+.cat-item:focus
+{
+text-decoration: none;}
+.cat-name:visited
+{
+text-decoration: none;}
+.category-link
+{
+  text-decoration: none;
+  outline: none;
+}
