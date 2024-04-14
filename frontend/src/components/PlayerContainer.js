@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './style.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBackward, faForward, faPlay, faPause, faListDots, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faBackward, faForward, faPlay, faPause, faListDots, faHeart, faShuffle } from '@fortawesome/free-solid-svg-icons';
 
 const PlayerContainer = ({ musicDetails, onMusicCompletion }) => {
   const [isPlaying, setIsPlaying] = useState(!musicDetails.autoPlay);
@@ -98,12 +98,6 @@ const PlayerContainer = ({ musicDetails, onMusicCompletion }) => {
         <span>{endTime}</span>
       </div>
       <div className="controls">
-        <FontAwesomeIcon icon={faHeart} onClick={onMusicCompletion} />
-        <div className="player-controls">
-          <FontAwesomeIcon icon={faBackward} onClick={handleBackward} />
-          <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} id="playPauseBtn" onClick={handlePlayPause} />
-          <FontAwesomeIcon icon={faForward} onClick={handleForward} />
-        </div>
         <button id="detail-button" onClick={handleToggle}>
           <FontAwesomeIcon icon={faListDots} />
           {isSwitched ? (
@@ -113,6 +107,12 @@ const PlayerContainer = ({ musicDetails, onMusicCompletion }) => {
             </div>
           ) : null}
         </button>
+        <div className="player-controls">
+          <FontAwesomeIcon icon={faBackward} onClick={handleBackward} />
+          <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} id="playPauseBtn" onClick={handlePlayPause} />
+          <FontAwesomeIcon icon={faForward} onClick={handleForward} />
+        </div>
+        <FontAwesomeIcon icon={faShuffle} onClick={onMusicCompletion} />
       </div>
     </div>
   );

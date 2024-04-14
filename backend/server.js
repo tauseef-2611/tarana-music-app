@@ -65,8 +65,9 @@ const ArtistModel = require('./models/artist.model');
     app.get('/music/artist/:artist', async (req, res) => {
         try {
           const artist = req.params.artist;
+          // console.log(artist);
           const musicByArtist = await MusicModel.find({ Artist: artist });
-      
+          // console.log(musicByArtist);
           res.json(musicByArtist);
         } catch (error) {
           console.error('Error:', error.message);
@@ -111,7 +112,7 @@ const ArtistModel = require('./models/artist.model');
     try {
       const category = req.params.category;
       const musicByCategory = await MusicModel.find({ Category: category });
-  
+      // console.log(musicByCategory);
       res.json(musicByCategory);
     } catch (error) {
       console.error('Error:', error.message);
@@ -207,7 +208,7 @@ app.get('/music/poet/:poet', async (req, res) => {
   try {
     const poet = req.params.poet;
     const musicByPoet = await MusicModel.find({ Poet: poet });
-
+    console.log(musicByPoet);
     res.json(musicByPoet);
   } catch (error) {
     console.error('Error:', error.message);
@@ -217,7 +218,7 @@ app.get('/music/poet/:poet', async (req, res) => {
 app.get('/music/artist/:artist', async (req, res) => {
   try {
     const poet = req.params.artist;
-    const musicByPoet = await MusicModel.find({ Poet: poet });
+    const musicByPoet = await MusicModel.find({ Artist: artist });
 
     res.json(musicByPoet);
   } catch (error) {

@@ -18,11 +18,13 @@ const GetMusicByCategory = ({ }) => {
       try {
         const response = await fetch(`${process.env.REACT_APP_URL}/music/category/${category}`);
         // const response = await fetch(`http://localhost:8000/music/most-played`);
+    
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
         const data = await response.json();
+        console.log('Data:', data);
         setMusicList(data);
         setIsLoading(false); // Set loading to false after data is fetched
       } catch (error) {

@@ -23,6 +23,7 @@ const GetMusicByPoet = ({ }) => {
         }
 
         const data = await response.json();
+        console.log('Data:', data);
         setMusicList(data);
         setIsLoading(false); // Set loading to false after data is fetched
       } catch (error) {
