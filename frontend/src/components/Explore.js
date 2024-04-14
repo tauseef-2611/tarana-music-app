@@ -16,9 +16,7 @@ function Explore() {
         <Poets/>
         <Artist/>
         <PLayListItem/>
-        <div className='space'
-        style={{height:'200px'}}
-        ></div>
+       
     </div>
   )
 }

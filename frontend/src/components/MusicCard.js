@@ -10,8 +10,8 @@ const MusicCard = ({ music }) => (
     <div className="l-gradient-layer"></div>
     <div className="l-content">
       <div className="l-text-content">
-        <h5>{music.Title}</h5>
-        <p>{music.Artist}</p>
+      <h5>{music.Title.length > 22 ? `${music.Title.substring(0, 22)}...` : music.Title}</h5>
+      <p>{music.Artist.length > 12 ? `${music.Artist.substring(0, 12)}...` : music.Artist}</p>      
       </div>
       {/* Use Link to navigate to the MusicPlayer component with the specific ID */}
       <Link to={`/musicplayer/${music._id}`}>

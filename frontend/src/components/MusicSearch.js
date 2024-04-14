@@ -32,6 +32,7 @@ const MusicSearch = () => {
   };
 
   return (
+<div className='search-results-container'>
     <div className='search'>
         <div className='search-box'>
       <input
@@ -43,7 +44,6 @@ const MusicSearch = () => {
       />
       <FontAwesomeIcon icon={faSearch} />
 </div>
-<div className='search-results-container'>
       {searchResults.length > 0 && (
     <div className="search-results">
     {searchResults.map((result) => (
@@ -51,6 +51,9 @@ const MusicSearch = () => {
           ))}
 </div>      )}
 </div>
+<div className='space'
+        style={{height:'100px'}}
+        ></div>
     </div>
 
   );

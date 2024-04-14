@@ -42,7 +42,7 @@ const ArtistModel = require('./models/artist.model');
     try {
       const recentlyAddedMusic = await MusicModel.find()
         .sort({ DateUploaded: -1 }) // Sort by DateUploaded in descending order
-        .limit(5); // Limit the result to the top 5 entries
+        .limit(10); // Limit the result to the top 5 entries
   
       res.json(recentlyAddedMusic);
     } catch (error) {
@@ -54,7 +54,7 @@ const ArtistModel = require('./models/artist.model');
     try {
       const mostPlayedMusic = await MusicModel.find()
         .sort({ Plays: -1 }) // Sort by Plays in descending order
-        .limit(5); // Limit the result to the top 5 entries
+        .limit(10); // Limit the result to the top 5 entries
   
       res.json(mostPlayedMusic);
     } catch (error) {

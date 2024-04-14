@@ -1,21 +1,21 @@
-import React, { useState, useEffect,CSSProperties  } from 'react';
+import React, { useState, useEffect,  } from 'react';
 import { useParams } from 'react-router-dom';
 import PlayerContainer from './PlayerContainer';
 import LyricsContainer from './LyricsContainer';
-import { faToggleOn, faToggleOff } from '@fortawesome/free-solid-svg-icons';
+import { faToggleOn, faToggleOff,faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './style.css';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import RingLoader from "react-spinners/RingLoader";
-const MusicPlayer = () => {
+const MusicPlayer = (props) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
-
   const [isSwitched, setSwitch] = useState(false);
   const [musicDetails, setMusicDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
+  let refaudio = React.createRef();
+  
   useEffect(() => {
     const fetchMusicDetails = async () => {
       try {
@@ -49,6 +49,7 @@ const MusicPlayer = () => {
   const handleToggle = () => {
     setSwitch(!isSwitched);
   };
+
 
   const onMusicCompletion = async () => {
     setIsLoading(true);
@@ -126,12 +127,43 @@ const MusicPlayer = () => {
       return null;
     }
   };
-  
+
+  const location = useLocation();
+  let currentTiming, navState;
+
+if (location.state) {
+  ({ currentTiming, navState } = location.state);
+} else {
+  console.error('location.state is null');
+}
+  const handleMinimize = () => {
+    props.onMinimize({ ...musicDetails, currentRef: refaudio });
+  };
+  const onClose = () => {
+    props.closePlayer();
+  };
+  console.log('Audio ref state:', currentTiming);
+  console.log('navState:', navState);
+
+  const currentRef = (audio) => {
+    refaudio = audio;
+    if(navState){
+    if (currentTiming) {
+      audio.currentTime = currentTiming;
+      navState=false;
+    } else {
+      console.error('Invalid currentTiming:', currentTiming);
+    }
+  }
+  };
   
   
 
   return (
+    <div className='musicPlayerContainer'>
+<FontAwesomeIcon icon={faArrowDown} id="minimizeButton" onClick={handleMinimize} />
     <div className={`player-component ${isSwitched ? 'switch' : ''}`}>
+
     <button id="toggleButton" onClick={handleToggle}>
       <FontAwesomeIcon icon={isSwitched ? faToggleOn : faToggleOff} />
     </button>
@@ -143,10 +175,11 @@ const MusicPlayer = () => {
          </div>
     ) : (
       <>
-        <PlayerContainer musicDetails={musicDetails} onMusicCompletion={onMusicCompletion} />
+        <PlayerContainer musicDetails={musicDetails} onMusicCompletion={onMusicCompletion} currentRef={currentRef} />
         {isSwitched && <LyricsContainer musicDetails={musicDetails} />}
       </>
     )}  
+  </div>
   </div>
   );
 };

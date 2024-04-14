@@ -3,17 +3,20 @@ import './style.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBackward, faForward, faPlay, faPause, faListDots, faHeart, faShuffle } from '@fortawesome/free-solid-svg-icons';
 
-const PlayerContainer = ({ musicDetails, onMusicCompletion }) => {
+const PlayerContainer = ({ musicDetails, onMusicCompletion,currentRef,validRef }) => {
   const [isPlaying, setIsPlaying] = useState(!musicDetails.autoPlay);
   const [progress, setProgress] = useState(0);
   const [startTime, setStartTime] = useState('0:00');
   const [endTime, setEndTime] = useState('3:30');
   const [isSwitched, setSwitch] = useState(false);
   const audioRef = React.createRef();
+  const getCurrentRef = () => audioRef.current;
+  // console.log('CurrentRef:',currentRef);
 
   useEffect(() => {
     const audio = audioRef.current;
-
+      currentRef(audio);
+      // validRef(audio)
     const handleTimeUpdate = () => {
       const duration = audio.duration;
       const currentTime = audio.currentTime;
@@ -40,15 +43,18 @@ const PlayerContainer = ({ musicDetails, onMusicCompletion }) => {
         onMusicCompletion();
       }
     };
-
+    if(audio){
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('ended', handleEnded);
-
+    }
     return () => {
+      if(audio)
+      {
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
+      }
     };
   }, [audioRef, onMusicCompletion]);
 
@@ -85,7 +91,7 @@ const PlayerContainer = ({ musicDetails, onMusicCompletion }) => {
   return (
     <div className="player-container">
       <img src={musicDetails.Cover} alt="Music Cover Image" />
-      <audio ref={audioRef} src={musicDetails.Link} autoPlay />
+      <audio ref={validRef ? validRef : audioRef} src={musicDetails.Link} autoPlay />
       <div className="player-text">
         <h5 id="player-title">{musicDetails.Title}</h5>
         <p id="player-description">{musicDetails.Artist}</p>
@@ -115,6 +121,7 @@ const PlayerContainer = ({ musicDetails, onMusicCompletion }) => {
         <FontAwesomeIcon icon={faShuffle} onClick={onMusicCompletion} />
       </div>
     </div>
+
   );
 };
 

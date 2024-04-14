@@ -40,12 +40,15 @@
       background: rgba(255, 255, 255, 0.058);
       border-radius: 30px;
       padding: 20px;
+      min-width: 300px;
       text-align: center;
       /* max-width: 600px; */
-      max-width: 600px;
+      /* max-width: 600px;
+       */
+       max-width: 90%;
       margin: 30px;
       margin-top: 60px;
-      margin-bottom: 200px;
+      /* margin-bottom: 60px; */
       position: relative;
       transition: 0.5s;
       backdrop-filter: blur(10px);
@@ -214,7 +217,7 @@
       font-size: 0.8rem;
       font-weight: 300;
       color: #fff;
-      text-align: left;
+      text-align: center;
       line-height: 180%;
     }
 
@@ -254,9 +257,7 @@
       max-height: 100px;
     }
 
-    .search {
-      margin-right: 20px;
-    }
+  
 
     .options {
       margin-left: 20px;
@@ -575,4 +576,26 @@
           flex-direction: column;
           gap: 1px;
           width: 70px;
+        }
+
+
+        .musicPlayerContainer
+        {
+          width: 100%;
+          justify-content: center;
+          align-items: center;
+          display: flex;
+          flex-direction: column;
+
+        }
+
+        #minimizeButton {
+          position: sticky;
+          top: 0;
+          right: 0;
+          background: rgba(255, 255, 255, 0.053);
+          backdrop-filter: blur(10px);          border-radius: 50%;
+          padding: 5px 10px;
+          color: #fff;
+          cursor: pointer;
         }

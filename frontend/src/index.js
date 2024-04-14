@@ -35,7 +35,10 @@ const InstallPrompt = () => {
   };
 
   return showPrompt ? (
-    <button onClick={handleInstall} style={{ fontSize: '20px', padding: '10px' }}>Install App</button>
+    <div style={{padding:'100px'}}>
+      <button onClick={handleInstall} style={{ fontSize: '20px', padding: '10px' }}>Install App</button>
+    </div>
+ 
   ) : null;
 };
 

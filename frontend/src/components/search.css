@@ -4,13 +4,14 @@
    display: flex; 
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     gap: 10px;
 }
 .search-box
 {
-    position: fixed;
     top: 16%;
     left: 50%;
+    position: fixed;
     transform: translate(-50%, -50%);
     /* background: #2f3640; */
     height: 45px;
@@ -48,6 +49,8 @@
 }
 .search-results-container {
     width: 100%;
+    position: absolute;
+    margin-top: 90px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,10 +58,11 @@
   }
   
   .search-results {
-    padding: 8px;
-    margin-top: 20%;
+    padding: 10px;
+    align-self: center;
+
     /* padding-top: 30%; */
-    width: auto;
+    width: 100%;
     height: fit-content;
     display: flex;
     flex-wrap: wrap;
