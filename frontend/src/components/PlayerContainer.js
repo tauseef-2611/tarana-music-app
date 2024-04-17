@@ -3,7 +3,7 @@ import './style.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBackward, faForward, faPlay, faPause, faListDots, faHeart, faShuffle } from '@fortawesome/free-solid-svg-icons';
 
-const PlayerContainer = ({ musicDetails, onMusicCompletion,currentRef,validRef }) => {
+const PlayerContainer = ({ musicDetails, onMusicCompletion, currentRef, validRef }) => {
   const [isPlaying, setIsPlaying] = useState(!musicDetails.autoPlay);
   const [progress, setProgress] = useState(0);
   const [startTime, setStartTime] = useState('0:00');
@@ -11,12 +11,11 @@ const PlayerContainer = ({ musicDetails, onMusicCompletion,currentRef,validRef }
   const [isSwitched, setSwitch] = useState(false);
   const audioRef = React.createRef();
   const getCurrentRef = () => audioRef.current;
-  // console.log('CurrentRef:',currentRef);
 
   useEffect(() => {
     const audio = audioRef.current;
-      currentRef(audio);
-      // validRef(audio)
+    currentRef(audio);
+
     const handleTimeUpdate = () => {
       const duration = audio.duration;
       const currentTime = audio.currentTime;
@@ -43,20 +42,38 @@ const PlayerContainer = ({ musicDetails, onMusicCompletion,currentRef,validRef }
         onMusicCompletion();
       }
     };
-    if(audio){
-    audio.addEventListener('timeupdate', handleTimeUpdate);
-    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
-    audio.addEventListener('ended', handleEnded);
+
+    if (audio) {
+      audio.addEventListener('timeupdate', handleTimeUpdate);
+      audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.addEventListener('ended', handleEnded);
     }
+
     return () => {
-      if(audio)
-      {
-      audio.removeEventListener('timeupdate', handleTimeUpdate);
-      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      audio.removeEventListener('ended', handleEnded);
+      if (audio) {
+        audio.removeEventListener('timeupdate', handleTimeUpdate);
+        audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        audio.removeEventListener('ended', handleEnded);
       }
     };
   }, [audioRef, onMusicCompletion]);
+
+  useEffect(() => {
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.setActionHandler('play', () => {
+        handlePlayPause();
+      });
+      navigator.mediaSession.setActionHandler('pause', () => {
+        handlePlayPause();
+      });
+      navigator.mediaSession.setActionHandler('previoustrack', () => {
+        handlePreviousTrack();
+      });
+      navigator.mediaSession.setActionHandler('nexttrack', () => {
+        handleNextTrack();
+      });
+    }
+  }, []);
 
   const handlePlayPause = () => {
     const audio = audioRef.current;
@@ -82,6 +99,14 @@ const PlayerContainer = ({ musicDetails, onMusicCompletion,currentRef,validRef }
   const handleForward = () => {
     const audio = audioRef.current;
     audio.currentTime += 10; // Go forward 10 seconds
+  };
+
+  const handlePreviousTrack = () => {
+    // Implement logic to play the previous track
+  };
+
+  const handleNextTrack = () => {
+    // Implement logic to play the next track
   };
 
   const handleToggle = () => {
@@ -121,7 +146,6 @@ const PlayerContainer = ({ musicDetails, onMusicCompletion,currentRef,validRef }
         <FontAwesomeIcon icon={faShuffle} onClick={onMusicCompletion} />
       </div>
     </div>
-
   );
 };
 

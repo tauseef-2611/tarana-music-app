@@ -5,9 +5,11 @@ import LyricsContainer from './LyricsContainer';
 import { faToggleOn, faToggleOff,faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './style.css';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import RingLoader from "react-spinners/RingLoader";
+
 const MusicPlayer = (props) => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -37,7 +39,13 @@ const MusicPlayer = (props) => {
         console.log('Fetched music details:', data);
 
         setMusicDetails(data);
-        
+        //update plays
+        try {
+          const updatePlays = await axios.put(`${process.env.REACT_APP_URL}/music/update-plays/${id}`);
+        } catch (error) {
+          throw new Error(`HTTP error! Status: ${error.response.status}`);
+        }
+
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching music details:', error.message);
