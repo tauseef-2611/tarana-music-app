@@ -31,7 +31,7 @@
       justify-content: center;
       height: 100vh;
       /* background-image: linear-gradient(to right top, #1d6796, #295785, #2f4873, #303960, #2e2b4e, #30274f, #33234f, #371e4f, #451f62, #541f75, #651c88, #78149b); */
-      background-image: url("BG.svg");
+      background-image: url("bckg.svg");
       background-repeat: repeat;
       background-attachment:local;
     }
@@ -40,7 +40,7 @@
       background: rgba(255, 255, 255, 0.058);
       border-radius: 30px;
       padding: 20px;
-      min-width: 300px;
+      min-width: 320px;
       text-align: center;
       /* max-width: 600px; */
       /* max-width: 600px;
@@ -84,7 +84,8 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      padding: 20px;
+      gap:5px;
+      padding: 20px 15px;
       color: #fff;
       font-size: 1rem;
     
@@ -94,8 +95,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap:10px;
-      width: 80%;
+      gap:8px;
+      width: 50%;
       color: #fff;
       font-size: 1.2rem;
       text-align: center;
@@ -103,6 +104,20 @@
     #detail-button
     {
       margin: 0%;
+    }
+    .progress {
+      position: relative;
+    }
+    
+    .progress-circle {
+      height: 10px;
+      width: 10px;
+      background-color: #ffffff;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translate(50%, -50%);
     }
 .music-details
 {
@@ -169,7 +184,8 @@
       width: 100%;
       justify-content: space-around;
       justify-items: flex-end;
-      gap: 200px;
+      gap: 150px;
+
       color: #ffffffcb;
       margin-top: 5px;
       position: relative;

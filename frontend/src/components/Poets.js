@@ -35,6 +35,8 @@ function Poets() {
     <div className='poet-container'>
 
       {poetList.map((poet) => (
+      
+        <div className="p-card" key={poet._id}>
       <NavLink to={`/poet/${poet.Name}`} className='category-link'>
       {/* <div className="poet-item">
         <img src={poet.Image} alt="Hamd" class="poet-img" />
@@ -42,12 +44,11 @@ function Poets() {
         {poet.Name}
       </h3>
       </div> */}
-      <div className="p-card" key={poet._id}>
     <img 
         className="p-background-image" 
         src={poet.Image} 
         alt={`Background Image for ${poet.Name}`} 
-        onError={(e)=>{e.target.onerror = null; e.target.src="https://themillions.com/wp-content/uploads/2016/09/Stipula_fountain_pen.jpg"}}
+        onError={(e)=>{e.target.onerror = null; e.target.src="https://png.pngtree.com/thumb_back/fh260/background/20230625/pngtree-poetry-on-vintage-paper-ink-pen-3d-rendering-image_3675587.jpg"}}
     />
     <div className="p-gradient-layer"></div>
     <div className="p-content">
@@ -56,8 +57,9 @@ function Poets() {
         {/* <p>{music.Artist}</p> */}
       </div>
     </div>
+    </NavLink>
 </div>
-      </NavLink>))}
+))}
     
     </div>
     </>

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const express = require('express');
+let path=require('path');
 const cors = require('cors'); 
 require('dotenv').config();
 
@@ -8,6 +9,13 @@ const port = process.env.PORT||3001;
 app.use(express.json());
 app.use(cors());
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+
+
+//Use the build folder in the frontend to serve the static files
+app.use(express.json()); // Parse JSON requests
+app.use(express.static(path.join(__dirname, 'build')));
+
+
 
 // Define the MongoDB model
 const PlaylistModel = require('./models/playlist.model');
@@ -239,9 +247,9 @@ app.get('/artists', async (req, res) => {
 });
 
 
-
-
-
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
   app.listen(port, () => {
     console.log(` My Server is running on port ${port}`);
   });

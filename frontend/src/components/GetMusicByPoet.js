@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import MusicCard from './MusicCard';
 import { useParams } from 'react-router-dom';
 import RingLoader from 'react-spinners/RingLoader';
+import './search.css'
 import './style.css';
 
 const GetMusicByPoet = ({ }) => {
@@ -45,8 +46,8 @@ const GetMusicByPoet = ({ }) => {
           </div>
         </div>
       ) : (
-        <div className="l-card-grid">
-          {musicList.map((music) => (
+        <div className="search-results">
+                    {musicList.map((music) => (
             <MusicCard key={music._id} music={music} />
           ))}
         </div>

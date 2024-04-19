@@ -37,7 +37,7 @@ const GetMusicByPlaylist = () => {
     <>
     <div className="card-grid-title">
       <h2>{musicList.Name}</h2>
-      <p>{musicList.Description}</p>
+      <p style={{fontWeight:'lighter'}}>{musicList.Description}</p>
       {isLoading ? (
         <div className="loading-container">
           <div className="centered-loader">
@@ -47,21 +47,10 @@ const GetMusicByPlaylist = () => {
       ) : (
         <div className="l-card-grid">
           {musicList.Music.map((music) => (
-            <div className="list-item" style={{width:'80%',justifyContent:'space-between'}} key={music._id}>
-                <img className="cover-image" src={music.Cover} alt="Cover Image 1" />
-                <div className="text-content">
-                    <h5 className="list-title" style={{width: '100%'}}>
-                        <Marquee speed={10} gradient={false} gradientWidth={20} gradientColor="rgba(255, 255, 255, 0.083)" pauseOnHover delay={5}>
-                        {music.Title+"  `"}
-                        </Marquee>
-                    </h5>
-                    <p className="list-description">
-                        {music.Artist}
-                    </p>
-                </div>
-          </div>          ))}
+            <ListItem key={music._id} music={music} />
+          ))}
+        </div>     
      
-</div>
       )}
     </div>
     </>

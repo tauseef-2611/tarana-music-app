@@ -16,6 +16,8 @@
     /* background: #2f3640; */
     height: 45px;
     background: rgba(255, 255, 255, 0.058);
+     /* box-shadow: 0 0 10px rgba(136, 136, 136, 0.622); */
+ 
     backdrop-filter: blur(10px);
     padding: 20px;
     z-index: 1000;

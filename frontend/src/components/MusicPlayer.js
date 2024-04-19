@@ -10,10 +10,13 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import RingLoader from "react-spinners/RingLoader";
 
+
+
 const MusicPlayer = (props) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isSwitched, setSwitch] = useState(false);
+  const [AllMusic, setAllMusic] = useState([]);
   const [musicDetails, setMusicDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   let refaudio = React.createRef();
@@ -32,12 +35,9 @@ const MusicPlayer = (props) => {
           console.log('Content-Type:', contentType);
           throw new Error('Invalid content type. Expected JSON.');
         }
-
+        const allmusic= await axios.get(`${process.env.REACT_APP_URL}/music`);
         const data = await response.json();
-
-        console.log('Server response:', response);
-        console.log('Fetched music details:', data);
-
+        setAllMusic(allmusic.data);        
         setMusicDetails(data);
         //update plays
         try {
@@ -45,12 +45,12 @@ const MusicPlayer = (props) => {
         } catch (error) {
           throw new Error(`HTTP error! Status: ${error.response.status}`);
         }
-
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching music details:', error.message);
       }
     };
+
 
     fetchMusicDetails();
   }, [id]);
@@ -59,16 +59,16 @@ const MusicPlayer = (props) => {
   };
 
 
-  const onMusicCompletion = async () => {
+
+  const getNextMusic = async () => {
     setIsLoading(true);
     // Get the current music's category
     const currentMusicCategory = musicDetails?.Category;
-    console.log('Current music category:', currentMusicCategory);
     // If there is a category, fetch a random music ID from another category
     if (currentMusicCategory) {
       try {
-        const randomMusicId = await getRandomMusicId(currentMusicCategory,musicDetails._id);
-        console.log('Random music ID:', randomMusicId);
+        const randomMusicId = await getRandomMusic(currentMusicCategory,musicDetails._id);
+
         if (randomMusicId) {
           // Redirect to the MusicPlayer component with the new random music ID
           navigate(`/musicplayer/${randomMusicId}`);
@@ -82,59 +82,50 @@ const MusicPlayer = (props) => {
     }
   };
   
-  const getRandomMusicId = async (currentCategoryId, currentMusicId) => {
+  const getRandomMusic = async (category, currentMusicId) => {
     try {
-      // Fetch music by category from the server
-      const response = await fetch(`${process.env.REACT_APP_URL}/music/category/${currentCategoryId}`);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-  
-      const data = await response.json();
-      console.log('Fetched music by category:', data);
-      
-      // Check if the response is an array
-      if (Array.isArray(data)&&data.length>1) {
+      // Filter music by category
+      const musicByCategory = AllMusic.filter(music => music.Category === category);
+    
+      // Check if there are musics in the category
+      if (musicByCategory.length > 0) {
         // Filter out the current music ID
-        const availableMusic = data.filter((music) => music._id !== currentMusicId);
-  
+        const availableMusic = musicByCategory.filter(music => music._id !== currentMusicId);
+    
         // If there are available musics in the category (excluding the current one), select a random one
         if (availableMusic.length > 0) {
           const randomMusic = availableMusic[Math.floor(Math.random() * availableMusic.length)];
           console.log('Selected random music:', randomMusic);
-  
+    
           // Return the ID of the selected random music
           return randomMusic._id;
         }
       }
-        else {
-          const allMusic = await fetch(`${process.env.REACT_APP_URL}/music`);
-          const data = await allMusic.json();
-          if (Array.isArray(data)) {
-        // Filter out the current music ID
-        const availableMusic = data.filter((music) => music._id !== currentMusicId);
-  
-        // If there are available musics in the category (excluding the current one), select a random one
-        if (availableMusic.length > 0) {
-          const randomMusic = availableMusic[Math.floor(Math.random() * availableMusic.length)];
-          console.log('Selected random music:', randomMusic);
-  
-          // Return the ID of the selected random music
-          return randomMusic._id;
-          // Handle the case where there are no other available musics in the category
-        }
-      } else {
-        // Handle the case where the response is not an array
-        console.log('Invalid response format. Expected an array.');
-        return null;
+    
+      // If no music found in the category, select a random music from all available music
+      const availableMusic = AllMusic.filter(music => music._id !== currentMusicId);
+      if (availableMusic.length > 0) {
+        const randomMusic = availableMusic[Math.floor(Math.random() * availableMusic.length)];
+        console.log('Selected random music:', randomMusic);
+    
+        // Return the ID of the selected random music
+        return randomMusic._id;
       }
-    }
+    
+      // Handle the case where there are no other available musics
+      console.log('No other available music.');
+      return null;
     } catch (error) {
-      console.error('Error fetching music by category:', error.message);
+      console.error('Error selecting random music:', error.message);
       return null;
     }
   };
+
+
+  const getPrevMusic = async () => {
+    navigate(-1);
+  };
+
 
   const location = useLocation();
   let currentTiming, navState;
@@ -145,13 +136,14 @@ if (location.state) {
   console.error('location.state is null');
 }
   const handleMinimize = () => {
+
     props.onMinimize({ ...musicDetails, currentRef: refaudio });
   };
   const onClose = () => {
     props.closePlayer();
   };
-  console.log('Audio ref state:', currentTiming);
-  console.log('navState:', navState);
+  // console.log('Audio ref state:', currentTiming);
+  // console.log('navState:', navState);
 
   const currentRef = (audio) => {
     refaudio = audio;
@@ -169,6 +161,8 @@ if (location.state) {
 
   return (
     <div className='musicPlayerContainer'>
+
+
 <FontAwesomeIcon icon={faArrowDown} id="minimizeButton" onClick={handleMinimize} />
     <div className={`player-component ${isSwitched ? 'switch' : ''}`}>
 
@@ -183,7 +177,7 @@ if (location.state) {
          </div>
     ) : (
       <>
-        <PlayerContainer musicDetails={musicDetails} onMusicCompletion={onMusicCompletion} currentRef={currentRef} />
+        <PlayerContainer musicDetails={musicDetails} getNextMusic={getNextMusic} getPrevMusic={getPrevMusic} currentRef={currentRef} />
         {isSwitched && <LyricsContainer musicDetails={musicDetails} />}
       </>
     )}  

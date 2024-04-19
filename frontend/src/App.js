@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import MusicPlayer from './components/MusicPlayer';
 import RecentlyAddedCarousel from './components/RecentlyAddedCarousel';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate,useLocation } from 'react-router-dom';
 import './components/style.css';
 import Logo from './logo-top.png';
 import Home from './components/Home';
@@ -29,12 +29,19 @@ function NavigationHandler({ onMinimize, onClose }) {
     }
   }, [onClose, isMinimized]);
 
-  return <MusicPlayer onMinimize={(details,currentRef) => {
-    
-    setIsMinimized(true);
-    onMinimize(details);
+  const location = useLocation();
+
+return <MusicPlayer onMinimize={(details,currentRef) => {
+  setIsMinimized(true);
+  onMinimize(details);
+
+  const previousPage = location.pathname;
+  if (previousPage.includes('musicplayer/')) {
+    navigate('/');
+  } else {
     navigate(-1);
-  }} />;
+  }
+}} />;
 }
 
 function App() {
@@ -95,7 +102,7 @@ function App() {
           <Route path="/explore" element={<Explore />} />
         </Routes>
         <div className='space'
-        style={{height:'200px'}}
+        style={{height:'50px'}}
         ></div>
         <BottomNavigation/>
       {isMinimized && musicDetails && <MiniPlayer musicDetails={musicDetails} currentRef={refaudio} closePlayer={closePlayer} />}

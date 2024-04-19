@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './style.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBackward, faForward, faPlay, faPause, faListDots, faHeart, faShuffle } from '@fortawesome/free-solid-svg-icons';
+import { faBackward, faForward, faPlay, faPause, faListDots, faClockRotateLeft, faShare } from '@fortawesome/free-solid-svg-icons';
 
-const PlayerContainer = ({ musicDetails, onMusicCompletion, currentRef, validRef }) => {
+const PlayerContainer = ({ musicDetails, getNextMusic,getPrevMusic, currentRef, validRef }) => {
   const [isPlaying, setIsPlaying] = useState(!musicDetails.autoPlay);
   const [progress, setProgress] = useState(0);
   const [startTime, setStartTime] = useState('0:00');
   const [endTime, setEndTime] = useState('3:30');
   const [isSwitched, setSwitch] = useState(false);
   const audioRef = React.createRef();
-  const getCurrentRef = () => audioRef.current;
+  // const getCurrentRef = () => audioRef.current;
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -25,8 +25,10 @@ const PlayerContainer = ({ musicDetails, onMusicCompletion, currentRef, validRef
 
       const minutes = Math.floor(currentTime / 60);
       const seconds = Math.floor(currentTime % 60);
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
 
-      setStartTime(`${minutes}:${seconds}`);
+      setStartTime(`${formattedMinutes}:${formattedSeconds}`);
     };
 
     const handleLoadedMetadata = () => {
@@ -34,51 +36,68 @@ const PlayerContainer = ({ musicDetails, onMusicCompletion, currentRef, validRef
       const minutes = Math.floor(duration / 60);
       const seconds = Math.floor(duration % 60);
 
-      setEndTime(`${minutes}:${seconds}`);
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+
+  setEndTime(`${formattedMinutes}:${formattedSeconds}`);
+      //check if music is ended
+
+    
     };
 
-    const handleEnded = () => {
-      if (onMusicCompletion) {
-        onMusicCompletion();
-      }
-    };
 
     if (audio) {
       audio.addEventListener('timeupdate', handleTimeUpdate);
       audio.addEventListener('loadedmetadata', handleLoadedMetadata);
-      audio.addEventListener('ended', handleEnded);
+      audio.addEventListener('ended', getNextMusic);
     }
 
     return () => {
       if (audio) {
         audio.removeEventListener('timeupdate', handleTimeUpdate);
         audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
-        audio.removeEventListener('ended', handleEnded);
+        audio.removeEventListener('ended', getNextMusic);
       }
     };
-  }, [audioRef, onMusicCompletion]);
+
+
+  }, [audioRef]);
 
   useEffect(() => {
     if ('mediaSession' in navigator) {
-      navigator.mediaSession.setActionHandler('play', () => {
-        handlePlayPause();
-      });
-      navigator.mediaSession.setActionHandler('pause', () => {
-        handlePlayPause();
-      });
+      // navigator.mediaSession.setActionHandler('play', () => {
+      //   handlePlayPause();
+      // });
+      // navigator.mediaSession.setActionHandler('pause', () => {
+      //   handlePlayPause();
+      // });
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: `Now playing: ${musicDetails.Title}`,
+        artist: musicDetails.Artist,
+        poet: musicDetails.Poet,
+        artwork: [
+          { src: musicDetails.Cover, sizes: '96x96', type: 'image/png' },
+          { src: musicDetails.Cover, sizes: '128x128', type: 'image/png' },
+          { src: musicDetails.Cover, sizes: '192x192', type: 'image/png' },
+          { src: musicDetails.Cover, sizes: '256x256', type: 'image/png' },
+          { src: musicDetails.Cover, sizes: '384x384', type: 'image/png' },
+          { src: musicDetails.Cover, sizes: '512x512', type: 'image/png' },
+        ]});
       navigator.mediaSession.setActionHandler('previoustrack', () => {
-        handlePreviousTrack();
+        getPrevMusic();
       });
       navigator.mediaSession.setActionHandler('nexttrack', () => {
-        handleNextTrack();
+        getNextMusic();
       });
     }
-  }, []);
+    document.title = musicDetails.Title+' | tarana.app';
+  }, [musicDetails, getNextMusic, getPrevMusic]);
 
-  const handlePlayPause = () => {
+
+  const handlePlayPause = async() => {
     const audio = audioRef.current;
     if (isPlaying) {
-      audio.pause();
+      await audio.pause();
     } else {
       audio.play();
     }
@@ -87,7 +106,11 @@ const PlayerContainer = ({ musicDetails, onMusicCompletion, currentRef, validRef
 
   const handleProgressChange = (e) => {
     const audio = audioRef.current;
-    const newProgress = (e.clientX / window.innerWidth) * 100;
+    const progressBar = e.target;
+    const rect = progressBar.getBoundingClientRect();
+    const x = e.clientX - rect.left; // x position within the element
+    const width = rect.width;
+    const newProgress = (x / width) * 100;
     audio.currentTime = (newProgress / 100) * audio.duration;
   };
 
@@ -101,28 +124,47 @@ const PlayerContainer = ({ musicDetails, onMusicCompletion, currentRef, validRef
     audio.currentTime += 10; // Go forward 10 seconds
   };
 
-  const handlePreviousTrack = () => {
-    // Implement logic to play the previous track
-  };
 
-  const handleNextTrack = () => {
-    // Implement logic to play the next track
-  };
 
   const handleToggle = () => {
     setSwitch(!isSwitched);
   };
 
+  const [isDragging, setIsDragging] = useState(false);
+
+const handleMouseDown = (e) => {
+  setIsDragging(true);
+  handleProgressChange(e);
+};
+
+const handleMouseMove = (e) => {
+  if (isDragging) {
+    handleProgressChange(e);
+  }
+};
+
+const handleMouseUp = () => {
+  setIsDragging(false);
+};
+
+
   return (
     <div className="player-container">
-      <img src={musicDetails.Cover} alt="Music Cover Image" />
+      
+      <img src={musicDetails.Cover} alt="Tarana Cover Image" />
       <audio ref={validRef ? validRef : audioRef} src={musicDetails.Link} autoPlay />
       <div className="player-text">
         <h5 id="player-title">{musicDetails.Title}</h5>
         <p id="player-description">{musicDetails.Artist}</p>
       </div>
-      <div className="progress-bar" onClick={handleProgressChange}>
-        <div style={{ width: `${progress}%` }}></div>
+      <div className="progress-bar" onClick={handleProgressChange}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      >
+      <div style={{ width: `${progress}%` }} className="progress">
+        <span className="progress-circle"></span>
+      </div>
       </div>
       <div className="timestamps">
         <span>{startTime}</span>
@@ -138,13 +180,32 @@ const PlayerContainer = ({ musicDetails, onMusicCompletion, currentRef, validRef
             </div>
           ) : null}
         </button>
+
+        <FontAwesomeIcon icon={faClockRotateLeft} onClick={handleBackward} />
+
         <div className="player-controls">
-          <FontAwesomeIcon icon={faBackward} onClick={handleBackward} />
+          <FontAwesomeIcon icon={faBackward} onClick={getPrevMusic} />
           <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} id="playPauseBtn" onClick={handlePlayPause} />
-          <FontAwesomeIcon icon={faForward} onClick={handleForward} />
+          <FontAwesomeIcon icon={faForward} onClick={getNextMusic} />
         </div>
-        <FontAwesomeIcon icon={faShuffle} onClick={onMusicCompletion} />
-      </div>
+        <FontAwesomeIcon icon={faClockRotateLeft} flip={'horizontal'}onClick={handleForward} />
+        <FontAwesomeIcon icon={faShare} onClick={async () => {
+          if (navigator.share) {
+            try {
+              await navigator.share({
+                title: 'Check out this tarana!',
+                text: `Now playing: ${musicDetails.Title} by ${musicDetails.Artist}`,
+                
+                url: window.location.href
+              });
+            } catch (error) {
+              console.error('Error sharing:', error);
+            }
+          } else {
+            console.log('Web Share API not supported.');
+          }
+        }} />    
+  </div>
     </div>
   );
 };
