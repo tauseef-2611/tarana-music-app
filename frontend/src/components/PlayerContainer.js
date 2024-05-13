@@ -175,9 +175,14 @@ const handleMouseUp = () => {
           <FontAwesomeIcon icon={faListDots} />
           {isSwitched ? (
             <div className="music-details">
-              <h5>{musicDetails.Artist}</h5>
-              <p>{musicDetails.Mood}</p>
-            </div>
+              <p className='music-details-p'>Poet: {musicDetails.Poet}</p>
+              <p className='music-details-p'>Artist: {musicDetails.Artist}</p>
+              <p className='music-details-p'>Category: {musicDetails.Category}</p>
+              <p className='music-details-p' > Disclaimer:
+              We do not claim ownership of any songs featured on this platform. All rights to the music belong to their respective owners.
+              </p>
+              <p className='music-details-p' > Reference: {musicDetails.Reference ? musicDetails.Reference : 'Not Available'}
+              </p></div>
           ) : null}
         </button>
 
@@ -195,7 +200,7 @@ const handleMouseUp = () => {
               await navigator.share({
                 title: 'Check out this tarana!',
                 text: `Now playing: ${musicDetails.Title} by ${musicDetails.Artist}`,
-                
+                Cover: musicDetails.Cover,
                 url: window.location.href
               });
             } catch (error) {
